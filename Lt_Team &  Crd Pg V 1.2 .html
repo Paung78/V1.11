@@ -6,6 +6,7 @@
   <title>Dark Fire Login</title> 
   <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600&display=swap" rel="stylesheet"/> 
   <style> 
+    /* Base Styles */
     * { margin: 0; padding: 0; box-sizing: border-box; } 
     body { 
       background-color: #121212; 
@@ -238,13 +239,15 @@
   </style> 
  </head> 
  <body> 
+  <!-- Time Display -->
   <div class="time-display" id="time-display">00:00</div> 
 
+  <!-- LOGIN PAGE -->
   <div id="login-box" class="container"> 
     <h1>Enter Passcode</h1> 
     <input type="password" id="password" placeholder="Enter Key"> 
     <button onclick="checkLogin()">Unlock</button> 
-    <p class="error" id="error-message">Wrong Key! Try Again.</p> 
+    <p class="error" id="error-message">Incorrect Key! Try again</p> 
     <div class="extra-buttons"> 
       <a href="https://cklottery.cc/#/register?invitationCode=81487219676" target="_blank"> 
         <button class="register-btn">Register</button> 
@@ -253,45 +256,48 @@
         <button class="telegram-btn">Telegram Channel</button> 
       </a> 
       <a href="https://t.me/colourtradingincome2" target="_blank"> 
-        <button class="video-btn">Deposite / Withdraw Video</button> 
+        <button class="video-btn">Deposit / Withdraw Video</button> 
       </a> 
       <a href="https://t.me/paunggyi111" target="_blank"> 
-        <button class="admin-btn">Admin Contact</button> 
+        <button class="admin-btn">Contact Admin</button> 
       </a> 
     </div> 
   </div> 
 
+  <!-- UID VERIFICATION PAGE -->
   <div id="uid-verification" class="container"> 
     <h1>Game UID Verification</h1> 
     <input type="text" id="uid" placeholder="Enter UID (4-6 digits)" maxlength="6"> 
     <button onclick="verifyUID()">Verify</button> 
-    <p class="error" id="uid-error">UID must be 4-6 digits!</p> 
+    <p class="error" id="uid-error">UID must be 4 to 6 digits only!</p> 
     <p class="success" id="uid-success">Verification Successful! <span class="loading"></span></p> 
   </div> 
 
+  <!-- PREDICTION PAGE -->
   <div id="prediction-page" class="container"> 
     <h1>CRD BY PYAUNGGYI</h1> 
-    <p id="result" class="result">PERIOD: <span class="box period-box">--</span></p> 
-    <p id="signal" class="signal">TRX SIGNAL: <span class="box">--</span></p> 
-    <p id="prediction" class="prediction">PREDICTED NUMBERS: <span class="box number-box">--/--</span></p> 
-    <p id="live-result">LIVE UPDATING...</p> 
+    <p id="result" class="result">Period (PERIOD): <span class="box period-box">--</span></p> 
+    <p id="signal" class="signal">TRX Signal: <span class="box">--</span></p> 
+    <p id="prediction" class="prediction">Predicted Numbers: <span class="box number-box">--/--</span></p> 
+    <p id="live-result">Fetching Live Data...</p> 
     <button class="predict-btn" onclick="fetchPrediction()">Predict</button> 
   </div> 
 
+  <!-- TIMEOUT PAGE -->
   <div id="timeout-page" class="container"> 
     <h1>Session Expired</h1> 
-    <p>Your 10-minute session has ended.</p> 
-    <button class="getout-btn" onclick="resetApplication()">GET OUT</button> 
+    <p>Your 10-minute session has expired.</p> 
+    <button class="getout-btn" onclick="resetApplication()">Exit</button> 
   </div> 
 
   <script> 
-    // Time tracking variables 
+    // Time tracking constants
     let seconds = 0; 
     let timerInterval; 
-    let predictionInterval; // Variable to hold the prediction interval ID 
-    const MAX_TIME = 600; // 10 minutes in seconds 
+    let predictionInterval; // Interval ID to store prediction fetch timer
+    const MAX_TIME = 600; // 10 minutes (600 seconds)
 
-    // Start timer when page loads 
+    // Initialize time display
     window.onload = function() { 
       updateTimeDisplay(); 
     }; 
@@ -304,7 +310,7 @@
     } 
 
     function startTimer() { 
-      clearInterval(timerInterval); // Clear any existing timer 
+      clearInterval(timerInterval); // Clearing existing timers
       seconds = 0; 
       updateTimeDisplay(); 
 
@@ -314,7 +320,7 @@
 
         if (seconds >= MAX_TIME) { 
           clearInterval(timerInterval); 
-          clearInterval(predictionInterval); // Stop fetching predictions on timeout 
+          clearInterval(predictionInterval); // Stop prediction fetching when time expires
           document.getElementById("prediction-page").style.display = "none"; 
           document.getElementById("timeout-page").style.display = "block"; 
         } 
@@ -322,17 +328,18 @@
     } 
 
     function resetApplication() { 
-      location.reload(); // Reload the page to start fresh 
+      location.reload(); // Reload page
     } 
 
     function checkLogin() { 
       var pass = document.getElementById("password").value; 
+      const errorMessage = document.getElementById("error-message");
       if (pass === "PYAUNG") { 
         document.getElementById("login-box").style.display = "none"; 
         document.getElementById("uid-verification").style.display = "block"; 
-        document.getElementById("error-message").style.display = "none"; // Hide error on success
+        errorMessage.style.display = "none"; 
       } else { 
-        document.getElementById("error-message").style.display = "block"; 
+        errorMessage.style.display = "block"; 
       } 
     } 
 
@@ -341,30 +348,32 @@
       const uidError = document.getElementById("uid-error"); 
       const uidSuccess = document.getElementById("uid-success"); 
 
-      // Hide previous messages 
+      // Hiding previous messages
       uidError.style.display = "none"; 
       uidSuccess.style.display = "none"; 
 
-      // Check UID length (4-6 digits) 
+      // Checking UID length (4-6 digits)
       if (uid.length < 4 || uid.length > 6 || !/^\d+$/.test(uid)) { 
         uidError.style.display = "block"; 
         return; 
       } 
 
-      // Show success message 
+      // Display success message
       uidSuccess.style.display = "block"; 
 
-      // After 3 seconds, proceed to prediction page 
+      // Navigate to prediction page after 3 seconds
       setTimeout(() => { 
         document.getElementById("uid-verification").style.display = "none"; 
         document.getElementById("prediction-page").style.display = "block"; 
-        startTimer(); // Start the 10-minute countdown 
+        startTimer(); // Start 10 minute countdown
+        
+        // Fetch once immediately and start interval
         fetchPrediction(); 
-        // Start the prediction fetching interval only after successful verification
         predictionInterval = setInterval(fetchPrediction, 10000); 
       }, 3000); 
     } 
 
+    // API Details
     const API_URL = 'https://api.bdg88zf.com/api/webapi/GetGameIssue'; 
     const REQUEST_DATA = { 
       typeId: 1, 
@@ -376,7 +385,11 @@
 
     let periodResults = {}; 
 
+    // Fetch prediction from API
     function fetchPrediction() { 
+      // Display loading state
+      document.getElementById("live-result").innerHTML = " fetching data... <span class='loading'></span>";
+
       fetch(API_URL, { 
         method: "POST", 
         headers: { 
@@ -384,15 +397,25 @@
         }, 
         body: JSON.stringify(REQUEST_DATA) 
       }) 
-      .then(response => response.json()) 
+      .then(response => {
+        if (!response.ok) {
+          throw new Error('Network response was not ok ' + response.statusText);
+        }
+        return response.json();
+      }) 
       .then(data => { 
         if (data && data.data) { 
           let issueNumber = data.data.issueNumber || "Unknown"; 
+          
+          // Generate a new prediction if one doesn't exist for this period.
           if (!periodResults[issueNumber]) { 
             let num1 = Math.floor(Math.random() * 10); 
             let num2 = (num1 + 3) % 10; 
+            
+            // Predict Big/Small by summing issueNumber digits
             let sumDigits = issueNumber.split('').reduce((acc, num) => acc + parseInt(num), 0); 
             let bigSmallPrediction = sumDigits % 2 === 0 ? "Big" : "Small"; 
+
             periodResults[issueNumber] = { 
               bigSmallPrediction, 
               predictedNumbers: `${num1}/${num2}` 
@@ -401,23 +424,20 @@
 
           let { bigSmallPrediction, predictedNumbers } = periodResults[issueNumber]; 
 
-          document.getElementById("result").innerHTML = `PERIOD: <span class="box period-box">${issueNumber}</span>`; 
-          document.getElementById("signal").innerHTML = `TRX SIGNAL: <span class="box ${bigSmallPrediction.toLowerCase()}">${bigSmallPrediction}</span>`; 
-          document.getElementById("prediction").innerHTML = `PREDICTED NUMBERS: <span class="box number-box">${predictedNumbers}</span>`; 
-          document.getElementById("live-result").innerHTML = "✅ LIVE DATA UPDATED!"; 
+          // Update UI
+          document.getElementById("result").innerHTML = `Period (PERIOD): <span class="box period-box">${issueNumber}</span>`; 
+          document.getElementById("signal").innerHTML = `TRX Signal: <span class="box ${bigSmallPrediction.toLowerCase()}">${bigSmallPrediction}</span>`; 
+          document.getElementById("prediction").innerHTML = `Predicted Numbers: <span class="box number-box">${predictedNumbers}</span>`; 
+          document.getElementById("live-result").innerHTML = "✅ Live data updated!"; 
         } else { 
-          document.getElementById("live-result").innerHTML = "⚠️ ERROR! Could not fetch data."; 
+          document.getElementById("live-result").innerHTML = "⚠️ ERROR! Cannot retrieve data."; 
         } 
       }) 
       .catch(error => { 
-        document.getElementById("live-result").innerHTML = "⚠️ ERROR! Network or API issue."; 
+        document.getElementById("live-result").innerHTML = "⚠️ ERROR! Network failure or API issue."; 
         console.error("API Fetch Error:", error); 
       }); 
     } 
-
-    // Removed: setInterval(fetchPrediction, 10000); 
-    // This is now started inside verifyUID() after successful login.
-
   </script> 
  </body> 
 </html>
